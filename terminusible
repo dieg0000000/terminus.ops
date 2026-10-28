@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Wrapper autour de ansible / ansible-playbook pour Terminus.
+#
+# Usage :
+#   ./terminusible                # lance le playbook complet
+#   ./terminusible --check -v     # simulation, sans rien modifier
+#   ./terminusible -m ping all    # mode ad-hoc : un seul module
+
+cd "$(dirname "$0")"; cd "$(/bin/pwd)"
+
+inventory="-i inventory/prod.yml"
+
+platform_check () {
+    if ! test -f ansible-deps-cache/.versions 2>/dev/null; then
+      curl https://raw.githubusercontent.com/epfl-si/ansible.suitcase/master/install.sh | \
+            SUITCASE_ANSIBLE_VERSION="10.1.0" \
+            SUITCASE_DIR=$PWD/ansible-deps-cache \
+            SUITCASE_ANSIBLE_REQUIREMENTS=requirements.yml \
+            SUITCASE_NO_EYAML=1 \
+            bash -x
+    fi
+    export PATH="$PWD/ansible-deps-cache/bin:$PATH"
+    export ANSIBLE_ROLES_PATH="$PWD/ansible-deps-cache/roles"
+    export ANSIBLE_COLLECTIONS_PATH="$PWD/ansible-deps-cache"
+}
+
+mode=ansible-playbook
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -m) mode=ansible
+            ansible_args+=("-m")
+            shift ;;
+        *)
+            ansible_args+=("$1")
+            shift ;;
+    esac
+done
+
+# https://github.com/ansible/ansible/issues/32499, https://bugs.python.org/issue35219
+case "$(uname -s)" in
+    Darwin) export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES ;;
+esac
+
+set -e
+
+platform_check
+case "$mode" in
+    ansible-playbook)
+        ansible-playbook $inventory "${ansible_args[@]}" playbook.yml
+        ;;
+    ansible)
+        ansible $inventory "${ansible_args[@]}"
+        ;;
+esac

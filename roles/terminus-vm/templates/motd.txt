@@ -1,0 +1,13 @@
+________________________________   _____  .___ _______   ____ ___  _________
+\__    ___/\_   _____/\______   \  /     \ |   |\      \ |    |   \/   _____/
+  |    |    |    __)_  |       _/ /  \ /  \|   |/   |   \|    |   /\_____  \ 
+  |    |    |        \ |    |   \/    Y    \   /    |    \    |  / /        \
+  |____|   /_______  / |____|_  /\____|__  /___\____|__  /______/ /_______  /
+                   \/         \/         \/            \/                 \/ {{ inventory_deployment_stage }}
+
+ Welcome on {{ inventory_hostname }}, the "{{ inventory_deployment_stage }}" for {{ motd_title }}.
+{% if terminus_hostname is defined %}
+ This should deploy the {{ motd_title }} app on https://{{ terminus_hostname }}.
+{% endif %}
+
+

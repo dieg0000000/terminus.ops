@@ -1,0 +1,15 @@
+- name: Setup
+  include_tasks:
+    file: setup.yml
+    apply:
+      tags:
+        - terminus.setup
+  tags: always
+
+- name: Build
+  include_tasks:
+    file: build.yml
+    apply:
+      tags:
+        - terminus.build
+  tags: always

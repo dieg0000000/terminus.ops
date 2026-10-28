@@ -1,0 +1,12 @@
+- name: Create the project directory
+  ansible.builtin.file:
+    path: /opt/terminus
+    state: directory
+    mode: "0755"
+
+- name: Copy the .env file
+  ansible.builtin.copy:
+    src: .env
+    dest: /opt/terminus/.env
+    mode: "0600"
+  diff: false

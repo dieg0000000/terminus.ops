@@ -1,0 +1,61 @@
+# This file handle things to set up the VM (SSH, docker, motd, etc.)
+---
+- name: Upgrade all APT packages
+  ansible.builtin.apt:
+    upgrade: dist
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install Docker and Compose
+  apt:
+    name:
+      - docker.io
+      - docker-compose-v2
+    state: latest
+    update_cache: true
+
+- name: Install Python Docker
+  apt:
+    name: python3-docker
+    state: latest
+    update_cache: true
+
+- name: Install pip
+  apt:
+    name: python3-pip
+    state: latest
+    update_cache: true
+
+- name: Deploy the message of the day
+  ansible.builtin.template:
+    src: motd.txt
+    dest: /etc/motd
+    mode: "0644"
+
+- name: Add some colors to the shell
+  replace:
+    path: ~/.bashrc
+    regexp: '^#force_color_prompt=yes$'
+    replace: 'force_color_prompt=yes'
+
+- name: Allow some of ISAS-FSD members SSH access
+  become: true
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "https://github.com/{{ item }}.keys"
+  with_items:
+    - dieg0000000
+
+- name: Install useful packages
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+    - ca-certificates
+    - curl
+    - git
+    - iputils-ping
+    - open-vm-tools
+    - tmux
+    - vim
