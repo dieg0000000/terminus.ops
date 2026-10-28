@@ -13,3 +13,11 @@
       tags:
         - terminus.build
   tags: always
+
+- name: Run
+  include_tasks:
+    file: run.yml
+    apply:
+      tags:
+        - terminus.run
+  tags: always

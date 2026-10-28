@@ -1,0 +1,6 @@
+- name: Build and start the Terminus stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/terminus
+    build: policy
+    pull: policy
+    state: present

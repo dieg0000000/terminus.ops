@@ -1,12 +1,19 @@
-- name: Create the project directory
-  ansible.builtin.file:
-    path: /opt/terminus
-    state: directory
-    mode: "0755"
+- name: Clone the drcv-esp32 repository
+  ansible.builtin.git:
+    repo: https://github.com/epfl-si/drcv-esp32.git
+    dest: /opt/terminus
+    version: feature/terminus
 
-- name: Copy the .env file
+- name: Copy the main .env file
   ansible.builtin.copy:
     src: .env
     dest: /opt/terminus/.env
+    mode: "0600"
+  diff: false
+
+- name: Copy the ews-api .env file
+  ansible.builtin.copy:
+    src: ews-api.env
+    dest: /opt/terminus/ews-api/.env
     mode: "0600"
   diff: false
