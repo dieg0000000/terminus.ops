@@ -1,2 +1,12 @@
-terminus_hostname: "terminus.fsd.epfl.ch"
 motd_title: "Terminus"
+terminus_hostname: "terminus.fsd.epfl.ch"
+
+terminus_project_dir: /opt/terminus
+terminus_uploads_volume: terminus_terminus_web-uploads
+
+terminus_old_project_dir: /home/ubuntu/drcv-esp32
+terminus_old_uploads_volume: drcv-esp32_terminus_web-uploads
+
+terminus_migration_files:
+  - terminus.dump
+  - terminus-uploads.tar

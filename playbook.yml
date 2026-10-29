@@ -1,5 +1,5 @@
 - name: Deploy terminus on vm
-  hosts: all
+  hosts: terminus
   gather_facts: no
   roles:
     - role: roles/terminus-vm

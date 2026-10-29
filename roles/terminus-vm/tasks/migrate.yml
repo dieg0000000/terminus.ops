@@ -1,0 +1,101 @@
+# Migrates the data (database + uploads) from the old VM to the new one.
+# The old VM keeps running: data written after the dump is not copied.
+# Only runs when asked explicitly: ./terminusible -t migrate
+# NEVER run this after the Cloudflare switch.
+
+- name: Confirm the migration
+  ansible.builtin.pause:
+    prompt: "This will REPLACE the data on the new VM with a copy of the old VM. Never run this after the Cloudflare switch. Type 'yes' to continue"
+  register: migration_confirm
+
+- name: Abort if not confirmed
+  ansible.builtin.fail:
+    msg: Migration aborted.
+  when: migration_confirm.user_input != 'yes'
+
+# --- Old VM: export the data (the old stack keeps running) ---
+
+- name: Dump the database on the old VM
+  ansible.builtin.shell:
+    cmd: docker exec terminus-db pg_dump -U terminus -Fc terminus > /tmp/terminus.dump
+  delegate_to: "{{ groups['terminus_old'][0] }}"
+  become: true
+  changed_when: true
+
+- name: Archive the uploads volume on the old VM
+  ansible.builtin.command:
+    cmd: >-
+      docker run --rm
+      -v {{ terminus_old_uploads_volume }}:/data:ro
+      -v /tmp:/backup
+      alpine tar cf /backup/terminus-uploads.tar -C /data .
+  delegate_to: "{{ groups['terminus_old'][0] }}"
+  become: true
+  changed_when: true
+
+# --- Transfer through the control machine ---
+
+- name: Fetch the data from the old VM
+  ansible.builtin.fetch:
+    src: "/tmp/{{ item }}"
+    dest: "{{ playbook_dir }}/migration/"
+    flat: true
+  loop: "{{ terminus_migration_files }}"
+  delegate_to: "{{ groups['terminus_old'][0] }}"
+
+- name: Upload the data to the new VM
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/migration/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: "0600"
+  loop: "{{ terminus_migration_files }}"
+
+# --- New VM: restore the data ---
+
+- name: Stop Terminus web and worker on the new VM
+  ansible.builtin.command:
+    cmd: docker compose stop web worker
+    chdir: "{{ terminus_project_dir }}"
+  changed_when: true
+
+- name: Restore the database
+  ansible.builtin.shell:
+    cmd: docker exec -i terminus-db pg_restore -U terminus -d terminus --clean --if-exists < /tmp/terminus.dump
+  changed_when: true
+
+- name: Restore the uploads volume (exact copy of the old one)
+  ansible.builtin.command:
+    cmd: >-
+      docker run --rm
+      -v {{ terminus_uploads_volume }}:/data
+      -v /tmp:/backup:ro
+      alpine sh -c "find /data -mindepth 1 -delete && tar xf /backup/terminus-uploads.tar -C /data"
+  changed_when: true
+
+- name: Start Terminus web and worker on the new VM
+  ansible.builtin.command:
+    cmd: docker compose start web worker
+    chdir: "{{ terminus_project_dir }}"
+  changed_when: true
+
+# --- Cleanup ---
+
+- name: Remove temporary files on the new VM
+  ansible.builtin.file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  loop: "{{ terminus_migration_files }}"
+
+- name: Remove temporary files on the old VM
+  ansible.builtin.file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  loop: "{{ terminus_migration_files }}"
+  delegate_to: "{{ groups['terminus_old'][0] }}"
+  become: true
+
+- name: Remove temporary files on the control machine
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/migration"
+    state: absent
+  delegate_to: localhost

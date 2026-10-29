@@ -4,3 +4,8 @@
     build: policy
     pull: policy
     state: present
+  register: compose_result
+  changed_when: >-
+    compose_result.actions
+    | rejectattr('id', 'search', 'init-certificates')
+    | list | length > 0

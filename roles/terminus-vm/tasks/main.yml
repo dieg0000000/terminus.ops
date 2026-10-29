@@ -3,7 +3,7 @@
     file: setup.yml
     apply:
       tags:
-        - terminus.setup
+        - setup
   tags: always
 
 - name: Build
@@ -11,7 +11,7 @@
     file: build.yml
     apply:
       tags:
-        - terminus.build
+        - build
   tags: always
 
 - name: Run
@@ -19,5 +19,14 @@
     file: run.yml
     apply:
       tags:
-        - terminus.run
+        - run
+  tags: always
+
+- name: Migrate
+  include_tasks:
+    file: migrate.yml
+    apply:
+      tags:
+        - migrate
+        - never
   tags: always

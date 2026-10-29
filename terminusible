@@ -9,7 +9,7 @@
 
 cd "$(dirname "$0")"; cd "$(/bin/pwd)"
 
-inventory="-i inventory/prod.yml"
+inventory="-i inventory/prod.yml -i inventory/old.yml"
 
 platform_check () {
     if ! test -f ansible-deps-cache/.versions 2>/dev/null; then

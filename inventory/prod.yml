@@ -1,6 +1,8 @@
 all:
-  hosts:
-    itswbhst0032.xaas.epfl.ch:
-      inventory_deployment_stage: prod
-      ansible_user: root
-      ansible_python_interpreter: /usr/bin/python3
+  children:
+    terminus:
+      hosts:
+        itswbhst0032.xaas.epfl.ch:
+          inventory_deployment_stage: prod
+          ansible_user: root
+          ansible_python_interpreter: /usr/bin/python3

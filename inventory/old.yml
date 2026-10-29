@@ -1,0 +1,7 @@
+all:
+  children:
+    terminus_old:
+      hosts:
+        86.119.34.249:
+          ansible_user: ubuntu
+          ansible_python_interpreter: /usr/bin/python3
