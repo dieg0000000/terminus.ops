@@ -1,8 +1,8 @@
-- name: Clone the drcv-esp32 repository
+- name: Clone the fsd-terminus repository
   ansible.builtin.git:
-    repo: https://github.com/epfl-si/drcv-esp32.git
+    repo: https://github.com/epfl-si/fsd-terminus.git
     dest: /root/fsd-terminus
-    version: feature/terminus
+    version: main
 
 - name: Copy the main .env file
   ansible.builtin.copy:

@@ -5,8 +5,8 @@ deploy and manage the EPFL's [Terminus] server (TRMNL e-ink displays) and its
 EWS room-booking companion apps. It uses [Ansible] wrapped in a convenient
 [suitcase], called [`terminusible`](./terminusible).
 
-All the "dev" code can be found in https://github.com/epfl-si/drcv-esp32
-(branch `feature/terminus`).
+All the "dev" code can be found in https://github.com/epfl-si/fsd-terminus
+(branch `main`).
 
 
 ## Prerequisites
