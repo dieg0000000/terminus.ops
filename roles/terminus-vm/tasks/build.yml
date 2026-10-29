@@ -4,16 +4,18 @@
     dest: /root/fsd-terminus
     version: main
 
-- name: Copy the main .env file
+- name: Copy the main .env file from Keybase
   ansible.builtin.copy:
-    src: .env
+    content: "{{ lookup('pipe', 'keybase fs read /keybase/team/epfl_sopec/terminus/env') }}\n"
     dest: /root/fsd-terminus/.env
     mode: "0600"
   diff: false
+  no_log: true
 
-- name: Copy the ews-api .env file
+- name: Copy the ews-api .env file from Keybase
   ansible.builtin.copy:
-    src: ews-api.env
+    content: "{{ lookup('pipe', 'keybase fs read /keybase/team/epfl_sopec/terminus/ews-api.env') }}\n"
     dest: /root/fsd-terminus/ews-api/.env
     mode: "0600"
   diff: false
+  no_log: true

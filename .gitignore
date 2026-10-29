@@ -1,4 +1,2 @@
 ansible-deps-cache
-roles/terminus-vm/files/.env
-roles/terminus-vm/files/ews-api.env
 migration/
