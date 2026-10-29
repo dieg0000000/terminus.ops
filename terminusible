@@ -1,13 +1,31 @@
 #!/bin/bash
 #
 # Wrapper autour de ansible / ansible-playbook pour Terminus.
-#
-# Usage :
-#   ./terminusible                # lance le playbook complet
-#   ./terminusible --check -v     # simulation, sans rien modifier
-#   ./terminusible -m ping all    # mode ad-hoc : un seul module
+# Lance ./terminusible --help pour l'aide.
 
 cd "$(dirname "$0")"; cd "$(/bin/pwd)"
+
+usage () {
+    cat <<EOF
+Usage:
+
+  ./terminusible [ -t sometag ] [OPTION]
+
+Options:
+  --check       Simulate, without changing anything
+  --diff        Show the changes in files
+  -m <module>   Ad-hoc mode: run a single module (e.g. -m ping all)
+  --help        Display this help
+
+Tags:
+  -t setup      Setup the VM (packages, Docker, MOTD, SSH)
+  -t build      Clone the code and copy the .env files
+  -t run        Build the images and start the containers
+  -t migrate    Copy the data from the old VM (never after the Cloudflare switch)
+
+Without tag, runs setup + build + run.
+EOF
+}
 
 inventory="-i inventory/prod.yml -i inventory/old.yml"
 
@@ -29,6 +47,9 @@ mode=ansible-playbook
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
+        -h|--help)
+            usage
+            exit 0 ;;
         -m) mode=ansible
             ansible_args+=("-m")
             shift ;;

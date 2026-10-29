@@ -31,7 +31,15 @@
       alpine tar cf /backup/terminus-uploads.tar -C /data .
   delegate_to: "{{ groups['terminus_old'][0] }}"
   become: true
+  register: uploads_archive
   changed_when: true
+  # Terminus deletes old images while tar runs: ignore only "file vanished" errors
+  failed_when: >-
+    uploads_archive.rc != 0 and
+    (uploads_archive.stderr_lines
+     | reject('search', 'No such file or directory')
+     | reject('search', 'error exit delayed')
+     | list | length > 0)
 
 # --- Transfer through the control machine ---
 
