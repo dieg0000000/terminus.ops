@@ -47,6 +47,10 @@
     key: "https://github.com/{{ item }}.keys"
   with_items:
     - dieg0000000
+    - ponsfrilus
+    - lvenries
+    - domq
+    - evinne08
 
 - name: Install useful packages
   become: true

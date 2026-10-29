@@ -1,5 +1,5 @@
 - name: Deploy terminus on vm
-  hosts: terminus
+  hosts: itswbhst0032.xaas.epfl.ch
   gather_facts: no
   roles:
     - role: roles/terminus-vm

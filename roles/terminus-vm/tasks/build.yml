@@ -1,19 +1,19 @@
 - name: Clone the drcv-esp32 repository
   ansible.builtin.git:
     repo: https://github.com/epfl-si/drcv-esp32.git
-    dest: /opt/terminus
+    dest: /root/fsd-terminus
     version: feature/terminus
 
 - name: Copy the main .env file
   ansible.builtin.copy:
     src: .env
-    dest: /opt/terminus/.env
+    dest: /root/fsd-terminus/.env
     mode: "0600"
   diff: false
 
 - name: Copy the ews-api .env file
   ansible.builtin.copy:
     src: ews-api.env
-    dest: /opt/terminus/ews-api/.env
+    dest: /root/fsd-terminus/ews-api/.env
     mode: "0600"
   diff: false
