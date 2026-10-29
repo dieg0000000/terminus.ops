@@ -50,7 +50,7 @@
     - ponsfrilus
     - lvenries
     - domq
-    - evinne08
+    - Evinne8
 
 - name: Install useful packages
   become: true
