@@ -25,7 +25,7 @@ All the "dev" code can be found in https://github.com/epfl-si/fsd-terminus
 Setup the VM, install Docker, clone the code, copy the secrets, build and run
 the containers (Caddy, Terminus, Postgres, Valkey, EWS API and frontend).
 
-Use `-t setup`, `-t build` or `-t run` to run only one step.
+Use `-t setup` or `-t terminus` to run only one step.
 
 Use `--check --diff` to see what would change, without changing anything.
 

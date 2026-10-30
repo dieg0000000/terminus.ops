@@ -6,20 +6,12 @@
         - setup
   tags: always
 
-- name: Build
+- name: Terminus
   include_tasks:
-    file: build.yml
+    file: terminus.yml
     apply:
       tags:
-        - build
-  tags: always
-
-- name: Run
-  include_tasks:
-    file: run.yml
-    apply:
-      tags:
-        - run
+        - terminus
   tags: always
 
 - name: Migrate

@@ -19,3 +19,10 @@
     mode: "0600"
   diff: false
   no_log: true
+
+- name: Build and start the Terminus stack
+  community.docker.docker_compose_v2:
+    project_src: /root/fsd-terminus
+    build: policy
+    pull: policy
+    state: present

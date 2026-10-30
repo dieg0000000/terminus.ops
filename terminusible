@@ -19,11 +19,10 @@ Options:
 
 Tags:
   -t setup      Setup the VM (packages, Docker, MOTD, SSH)
-  -t build      Clone the code and copy the .env files
-  -t run        Build the images and start the containers
+  -t terminus   Clone the code, copy the .env files, build and start the containers
   -t migrate    Copy the data from the old VM (never after the Cloudflare switch)
 
-Without tag, runs setup + build + run.
+Without tag, runs setup + terminus.
 EOF
 }
 
