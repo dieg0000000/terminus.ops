@@ -17,8 +17,6 @@ All the "dev" code can be found in https://github.com/epfl-si/fsd-terminus
   * `.env`: Terminus, Postgres and Valkey settings
   * `ews-api.env`: Exchange and Azure credentials
 
-  TODO: move them to [Keybase] `/keybase/team/epfl_idevfsd/terminus/`.
-
 
 ## TL;DR
 
